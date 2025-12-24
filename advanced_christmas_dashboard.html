@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎄 Advanced Christmas Dashboard for Priya 🎅</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Mountains+of+Christmas&family=Dancing+Script:wght@700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(45deg, #0f0c29, #302b63, #24243e);
+            font-family: 'Dancing Script', cursive;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 2s infinite;
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .snow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .snowflake {
+            position: absolute;
+            color: white;
+            font-size: 1.2em;
+            animation: fall linear infinite;
+            text-shadow: 0 0 10px rgba(255,255,255,0.8);
+        }
+
+        @keyframes fall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .container {
+            position: relative;
+            z-index: 3;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .header {
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .title {
+            font-family: 'Mountains of Christmas', cursive;
+            font-size: 5rem;
+            background: linear-gradient(45deg, #ff6b6b, #ffd700, #4ecdc4, #45b7d1);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientShift 3s ease infinite, glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 30px rgba(255,107,107,0.5);
+            margin-bottom: 20px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 20px #ff6b6b); }
+            to { filter: drop-shadow(0 0 40px #ffd700); }
+        }
+
+        .santa-container {
+            position: relative;
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .santa {
+            font-size: 10rem;
+            animation: santaBounce 3s infinite, santaGlow 2s infinite alternate;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .santa:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        @keyframes santaBounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0) rotate(0deg); }
+            40% { transform: translateY(-40px) rotate(-10deg); }
+            60% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        @keyframes santaGlow {
+            from { filter: drop-shadow(0 0 20px #ff6b6b); }
+            to { filter: drop-shadow(0 0 40px #ffd700); }
+        }
+
+        .message-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            padding: 50px;
+            margin: 40px auto;
+            max-width: 700px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,215,0,0.3);
+            position: relative;
+            overflow: hidden;
+            animation: cardFloat 4s ease-in-out infinite;
+        }
+
+        @keyframes cardFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .message-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,215,0,0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .message-card h2 {
+            color: #2c5530;
+            font-size: 3rem;
+            margin-bottom: 25px;
+            font-family: 'Mountains of Christmas', cursive;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .message-card p {
+            color: #444;
+            font-size: 1.5rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .heart {
+            color: #ff6b6b;
+            font-size: 2.5rem;
+            animation: heartbeat 1.5s ease-in-out infinite;
+            display: inline-block;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+            100% { transform: scale(1); }
+        }
+
+        .interactive-section {
+            margin: 50px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) scale(1.05);
+            box-shadow: 0 20px 40px rgba(255,107,107,0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            font-family: 'Mountains of Christmas', cursive;
+        }
+
+        .feature-card p {
+            color: white;
+            font-size: 1.2rem;
+        }
+
+        .decorations {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 50px 0;
+            flex-wrap: wrap;
+        }
+
+        .decoration {
+            font-size: 4rem;
+            animation: decorationSpin 4s linear infinite;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .decoration:hover {
+            transform: scale(1.5);
+        }
+
+        @keyframes decorationSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .christmas-tree {
+            font-size: 8rem;
+            color: #2d5a2d;
+            margin: 30px;
+            animation: treeSway 4s ease-in-out infinite;
+            cursor: pointer;
+            filter: drop-shadow(0 0 20px #2d5a2d);
+        }
+
+        @keyframes treeSway {
+            0%, 100% { transform: rotate(-8deg); }
+            50% { transform: rotate(8deg); }
+        }
+
+
+
+        .music-visualizer {
+            display: flex;
+            justify-content: center;
+            gap: 5px;
+            margin: 30px 0;
+        }
+
+        .bar {
+            width: 8px;
+            background: linear-gradient(to top, #ff6b6b, #ffd700);
+            border-radius: 4px;
+            animation: musicBars 1s ease-in-out infinite;
+        }
+
+        .bar:nth-child(2) { animation-delay: 0.1s; }
+        .bar:nth-child(3) { animation-delay: 0.2s; }
+        .bar:nth-child(4) { animation-delay: 0.3s; }
+        .bar:nth-child(5) { animation-delay: 0.4s; }
+
+        @keyframes musicBars {
+            0%, 100% { height: 20px; }
+            50% { height: 60px; }
+        }
+
+        .floating-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-emoji {
+            position: absolute;
+            font-size: 2rem;
+            animation: floatUp 6s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+        }
+
+        .wish-section {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 25px;
+            padding: 40px;
+            margin: 40px auto;
+            max-width: 700px;
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255,215,0,0.3);
+            text-align: center;
+        }
+
+        .wish-section h3 {
+            color: #ffd700;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            font-family: 'Mountains of Christmas', cursive;
+            text-shadow: 0 0 20px rgba(255,215,0,0.5);
+        }
+
+        .wish-input-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #wishInput {
+            flex: 1;
+            min-width: 300px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            outline: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        #wishInput::placeholder {
+            color: #666;
+            font-style: italic;
+        }
+
+        .wish-input-container button {
+            padding: 15px 25px;
+            border: none;
+            border-radius: 25px;
+            background: linear-gradient(45deg, #ff6b6b, #ffd700);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .wish-input-container button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        }
+
+        .wishes-display {
+            margin-top: 30px;
+        }
+
+        .wish-item {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 4px solid #ffd700;
+            animation: wishAppear 0.5s ease-out;
+        }
+
+        .wish-item p {
+            color: white;
+            font-size: 1.3rem;
+            margin: 0;
+        }
+
+        .wish-item .wish-time {
+            color: #ffd700;
+            font-size: 0.9rem;
+            margin-top: 10px;
+        }
+
+        @keyframes wishAppear {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .title { font-size: 3rem; }
+            .santa { font-size: 6rem; }
+            .message-card { padding: 30px; margin: 20px; }
+            .message-card h2 { font-size: 2rem; }
+            .message-card p { font-size: 1.2rem; }
+            .interactive-section { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    <div class="snow" id="snow"></div>
+    <div class="floating-elements" id="floatingElements"></div>
+    
+    <div class="container">
+        <div class="header">
+            <h1 class="title">🎄 Merry Christmas 🎄</h1>
+            <div class="santa-container">
+                <div class="santa" onclick="santaClick()">🎅</div>
+            </div>
+        </div>
+
+        <div class="message-card">
+            <h2>Dear Priya Yadav 🎅</h2>
+            <p>इस जादुई Christmas के मौके पर,</p>
+            <p>Santa आपके लिए ढेर सारी खुशियाँ और प्यार लेकर आया है! <span class="heart">❤️</span></p>
+            <p>आपकी मुस्कान Christmas के सितारों से भी ज्यादा चमकती है!</p>
+            <p>आपका हर दिन Christmas की तरह मीठा और खुशियों से भरा हो!</p>
+            <p><strong>Merry Christmas & Happy New Year Priya! 🎉</strong></p>
+            <div class="heart">💕 With All My Love 💕</div>
+        </div>
+
+        <div class="wish-section">
+            <h3>🎄 What's Your Wish for Today's Christmas? 🎄</h3>
+            <div class="wish-input-container">
+                <input type="text" id="wishInput" placeholder="Share your Christmas wish with Santa..." maxlength="100">
+                <button onclick="submitWish()">✨ Send to Santa ✨</button>
+            </div>
+            <div class="wishes-display" id="wishesDisplay"></div>
+        </div>
+
+
+
+        <div class="interactive-section">
+            <div class="feature-card" onclick="playChristmasMusic()">
+                <h3>🎵 Christmas Songs</h3>
+                <p>Play magical Christmas melodies</p>
+                <div class="music-visualizer">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+            </div>
+            
+            <div class="feature-card" onclick="showLoveMessage()">
+                <h3>💕 Love Notes</h3>
+                <p>Special messages from the heart</p>
+            </div>
+            
+            <div class="feature-card" onclick="createFireworks()">
+                <h3>🎆 Fireworks</h3>
+                <p>Celebrate with magical fireworks</p>
+            </div>
+            
+            <div class="feature-card" onclick="santaGifts()">
+                <h3>🎁 Santa's Gifts</h3>
+                <p>Discover special surprises</p>
+            </div>
+        </div>
+
+        <div class="decorations">
+            <span class="decoration" onclick="decorationClick(this)">🎁</span>
+            <span class="decoration" onclick="decorationClick(this)">⭐</span>
+            <span class="decoration" onclick="decorationClick(this)">🔔</span>
+            <span class="decoration" onclick="decorationClick(this)">🎀</span>
+            <span class="decoration" onclick="decorationClick(this)">🕯️</span>
+        </div>
+
+        <div class="christmas-tree" onclick="treeClick()">🎄</div>
+    </div>
+
+    <script>
+        // Create stars
+        function createStars() {
+            const stars = document.getElementById('stars');
+            for (let i = 0; i < 100; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + '%';
+                star.style.top = Math.random() * 100 + '%';
+                star.style.width = Math.random() * 3 + 1 + 'px';
+                star.style.height = star.style.width;
+                star.style.animationDelay = Math.random() * 2 + 's';
+                stars.appendChild(star);
+            }
+        }
+
+        // Enhanced snow effect
+        function createSnow() {
+            const snow = document.getElementById('snow');
+            const snowflakes = ['❄', '❅', '❆', '✻', '✼', '❋'];
+            
+            for (let i = 0; i < 80; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.innerHTML = snowflakes[Math.floor(Math.random() * snowflakes.length)];
+                snowflake.style.left = Math.random() * 100 + '%';
+                snowflake.style.animationDuration = Math.random() * 4 + 3 + 's';
+                snowflake.style.animationDelay = Math.random() * 3 + 's';
+                snowflake.style.fontSize = Math.random() * 1 + 0.8 + 'em';
+                snow.appendChild(snowflake);
+            }
+        }
+
+        // Floating emojis
+        function createFloatingEmojis() {
+            const container = document.getElementById('floatingElements');
+            const emojis = ['💖', '🎄', '⭐', '🎁', '🔔', '❄️', '🎅', '🤶'];
+            
+            setInterval(() => {
+                const emoji = document.createElement('div');
+                emoji.className = 'floating-emoji';
+                emoji.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.left = Math.random() * 100 + '%';
+                emoji.style.animationDuration = Math.random() * 3 + 4 + 's';
+                container.appendChild(emoji);
+                
+                setTimeout(() => {
+                    emoji.remove();
+                }, 7000);
+            }, 2000);
+        }
+
+
+
+        // Wish functionality
+        function submitWish() {
+            const wishInput = document.getElementById('wishInput');
+            const wishText = wishInput.value.trim();
+            
+            if (wishText === '') {
+                showNotification('🎅 Please write your wish first!');
+                return;
+            }
+            
+            const wishesDisplay = document.getElementById('wishesDisplay');
+            const wishItem = document.createElement('div');
+            wishItem.className = 'wish-item';
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+            
+            wishItem.innerHTML = `
+                <p>🌟 "${wishText}"</p>
+                <div class="wish-time">✨ Sent to Santa at ${timeString} ✨</div>
+            `;
+            
+            wishesDisplay.insertBefore(wishItem, wishesDisplay.firstChild);
+            wishInput.value = '';
+            
+            // Santa responses
+            const responses = [
+                '🎅 Ho Ho Ho! Santa received your wish, Priya!',
+                '⭐ Your wish is noted in Santa\'s magical book!',
+                '🎁 Santa is working on making your wish come true!',
+                '❄️ Your wish sparkles like Christmas snow!',
+                '🔔 The Christmas bells are ringing for your wish!'
+            ];
+            
+            setTimeout(() => {
+                showNotification(responses[Math.floor(Math.random() * responses.length)]);
+            }, 1000);
+        }
+        
+        // Enter key support for wish input
+        document.addEventListener('DOMContentLoaded', function() {
+            const wishInput = document.getElementById('wishInput');
+            if (wishInput) {
+                wishInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        submitWish();
+                    }
+                });
+            }
+        });
+        function santaClick() {
+            const messages = [
+                '🎅 Ho Ho Ho! Priya, you\'ve been very nice this year!',
+                '🎁 Santa has something special for you!',
+                '⭐ You shine brighter than Christmas stars!',
+                '❄️ Your smile melts my heart like snow!',
+                '🔔 Jingle bells ring for your happiness!'
+            ];
+            showNotification(messages[Math.floor(Math.random() * messages.length)]);
+        }
+
+        function playChristmasMusic() {
+            const songs = [
+                '🎵 "Jingle Bells" playing for Priya! 🔔',
+                '🎶 "Silent Night" - peaceful like your beauty! 🌙',
+                '🎵 "White Christmas" - dreaming of you! ❄️',
+                '🎶 "Let it Snow" - magical moments with you! ❄️'
+            ];
+            showNotification(songs[Math.floor(Math.random() * songs.length)]);
+        }
+
+        function showLoveMessage() {
+            const messages = [
+                '💕 Priya, you make every day feel like Christmas!',
+                '❤️ Your love is the best gift I could ask for!',
+                '💖 Like Christmas lights, you brighten my world!',
+                '💝 You\'re more precious than all Santa\'s gifts!',
+                '🌟 You\'re my Christmas wish come true!'
+            ];
+            showNotification(messages[Math.floor(Math.random() * messages.length)]);
+        }
+
+        function createFireworks() {
+            for (let i = 0; i < 10; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.innerHTML = '🎆';
+                    firework.style.position = 'fixed';
+                    firework.style.left = Math.random() * window.innerWidth + 'px';
+                    firework.style.top = Math.random() * window.innerHeight + 'px';
+                    firework.style.fontSize = '3rem';
+                    firework.style.zIndex = '1000';
+                    firework.style.animation = 'fireworkBurst 2s ease-out forwards';
+                    document.body.appendChild(firework);
+                    
+                    setTimeout(() => firework.remove(), 2000);
+                }, i * 200);
+            }
+            showNotification('🎆 Fireworks for the most beautiful Priya! 🎆');
+        }
+
+        function santaGifts() {
+            const gifts = [
+                '🎁 A box full of endless happiness for Priya!',
+                '💎 A diamond as precious as your smile!',
+                '🌹 A bouquet of Christmas roses!',
+                '⭐ A star named after you in the sky!',
+                '💕 All my love wrapped with a bow!'
+            ];
+            showNotification(gifts[Math.floor(Math.random() * gifts.length)]);
+        }
+
+        function decorationClick(element) {
+            element.style.transform = 'scale(2) rotate(720deg)';
+            setTimeout(() => {
+                element.style.transform = '';
+            }, 1000);
+            showNotification('✨ Christmas magic activated! ✨');
+        }
+
+        function treeClick() {
+            const tree = document.querySelector('.christmas-tree');
+            tree.style.filter = 'drop-shadow(0 0 50px #ffd700)';
+            setTimeout(() => {
+                tree.style.filter = 'drop-shadow(0 0 20px #2d5a2d)';
+            }, 2000);
+            showNotification('🎄 Christmas tree lights up for Priya! 🎄');
+        }
+
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.innerHTML = message;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: rgba(255, 255, 255, 0.95);
+                color: #333;
+                padding: 20px;
+                border-radius: 15px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+                z-index: 1000;
+                font-size: 1.2rem;
+                max-width: 300px;
+                animation: slideIn 0.5s ease-out;
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.5s ease-in forwards';
+                setTimeout(() => notification.remove(), 500);
+            }, 4000);
+        }
+
+        // Click effects
+        document.addEventListener('click', function(e) {
+            const effects = ['💖', '⭐', '❄️', '🎄', '🎁'];
+            const effect = document.createElement('div');
+            effect.innerHTML = effects[Math.floor(Math.random() * effects.length)];
+            effect.style.cssText = `
+                position: fixed;
+                left: ${e.clientX}px;
+                top: ${e.clientY}px;
+                font-size: 2rem;
+                pointer-events: none;
+                z-index: 1000;
+                animation: clickEffect 2s ease-out forwards;
+            `;
+            document.body.appendChild(effect);
+            
+            setTimeout(() => effect.remove(), 2000);
+        });
+
+        // Add CSS animations
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+            @keyframes clickEffect {
+                0% { transform: scale(1) translateY(0); opacity: 1; }
+                100% { transform: scale(2) translateY(-50px); opacity: 0; }
+            }
+            @keyframes fireworkBurst {
+                0% { transform: scale(0); opacity: 1; }
+                50% { transform: scale(1.5); opacity: 0.8; }
+                100% { transform: scale(3); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize everything
+        createStars();
+        createSnow();
+        createFloatingEmojis();
+
+        // Welcome message
+        setTimeout(() => {
+            showNotification('🎅 Welcome to your magical Christmas dashboard, Priya! 🎄');
+        }, 2000);
+    </script>
+</body>
+</html>
