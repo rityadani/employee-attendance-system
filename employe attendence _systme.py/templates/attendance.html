@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mark Attendance</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 20px; }
+        .container { background: white; padding: 30px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 1200px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 30px; text-align: center; }
+        .content { display: grid; grid-template-columns: 1.5fr 1fr; gap: 20px; max-height: calc(100vh - 250px); }
+        #video { width: 100%; max-height: 500px; object-fit: cover; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .back { text-align: center; margin-top: 20px; grid-column: 1 / -1; }
+        .back a { color: #667eea; text-decoration: none; font-size: 1.1em; }
+        .info { background: #e7f3ff; padding: 15px; border-radius: 10px; margin-bottom: 20px; text-align: center; color: #004085; grid-column: 1 / -1; }
+        .attendance-list { background: #f8f9fa; padding: 20px; border-radius: 10px; max-height: 500px; overflow-y: auto; display: flex; flex-direction: column; }
+        .attendance-list h2 { font-size: 1.3em; margin-bottom: 15px; color: #333; flex-shrink: 0; }
+        .attendance-item { background: white; padding: 10px 12px; margin-bottom: 8px; border-radius: 8px; border-left: 4px solid #28a745; flex-shrink: 0; }
+        .attendance-item .name { font-weight: bold; color: #333; font-size: 0.95em; }
+        .attendance-item .time { color: #666; font-size: 0.85em; }
+        #attendanceRecords { overflow-y: auto; flex: 1; }
+        
+        @media (max-width: 768px) { 
+            .content { grid-template-columns: 1fr; max-height: none; } 
+            #video { max-height: 300px; }
+            .attendance-list { max-height: 400px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📸 Mark Attendance</h1>
+        <div class="info">Stand in front of camera. System will automatically detect and mark attendance.</div>
+        
+        <div class="content">
+            <div>
+                <img id="video" src="{{ url_for('video_feed') }}" alt="Video Feed">
+            </div>
+            
+            <div class="attendance-list">
+                <h2>✅ Today's Attendance</h2>
+                <div id="attendanceRecords">Loading...</div>
+            </div>
+        </div>
+        
+        <div class="back"><a href="/">← Back to Home</a></div>
+    </div>
+
+    <script>
+        async function loadAttendance() {
+            try {
+                const response = await fetch('/api/daily_report');
+                const data = await response.json();
+                
+                const recordsDiv = document.getElementById('attendanceRecords');
+                if (data.records.length === 0) {
+                    recordsDiv.innerHTML = '<p style="text-align:center; color:#999;">No attendance marked yet</p>';
+                } else {
+                    recordsDiv.innerHTML = data.records.map(r => `
+                        <div class="attendance-item">
+                            <div class="name">👤 ${r.name}</div>
+                            <div class="time">🕐 ${r.time}</div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                document.getElementById('attendanceRecords').innerHTML = '<p style="color:red;">Error loading data</p>';
+            }
+        }
+        
+        loadAttendance();
+        setInterval(loadAttendance, 3000); // Refresh every 3 seconds
+    </script>
+</body>
+</html>

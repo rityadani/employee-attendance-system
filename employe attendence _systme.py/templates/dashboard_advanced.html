@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Dashboard - Attendance System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-btns {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            font-weight: bold;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .stat-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .stat-value {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .main-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .card-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .refresh-btn {
+            padding: 8px 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+        }
+        
+        .refresh-btn:hover {
+            background: #764ba2;
+        }
+        
+        .chart-container {
+            height: 350px;
+            position: relative;
+        }
+        
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .employee-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            color: white;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .employee-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        
+        .employee-avatar {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .employee-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .employee-days {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .attendance-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .attendance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s;
+        }
+        
+        .attendance-item:hover {
+            transform: translateX(10px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .attendance-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .attendance-time {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .leaderboard-item:hover {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            transform: translateX(5px);
+        }
+        
+        .rank {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-right: 15px;
+            min-width: 50px;
+        }
+        
+        .leader-info {
+            flex: 1;
+        }
+        
+        .leader-name {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .leader-rate {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .medal {
+            font-size: 2em;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 10px;
+            transition: width 1s ease;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 10px;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 Advanced Dashboard</h1>
+            <div class="nav-btns">
+                <a href="/register" class="nav-btn">➕ Register</a>
+                <a href="/attendance" class="nav-btn">📸 Attendance</a>
+                <a href="/reports" class="nav-btn">📊 Reports</a>
+                <a href="/" class="nav-btn">🏠 Home</a>
+            </div>
+        </div>
+        
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" id="totalEmployees">0</div>
+                <div class="stat-label">Total Employees</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="presentToday">0</div>
+                <div class="stat-label">Present Today</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="avgAttendance">0%</div>
+                <div class="stat-label">Avg Attendance</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🕐</div>
+                <div class="stat-value" id="currentTime">--:--</div>
+                <div class="stat-label">Current Time</div>
+            </div>
+        </div>
+        
+        <!-- Main Grid -->
+        <div class="main-grid">
+            <!-- Left: Employees -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">👥 All Employees</div>
+                    <button class="refresh-btn" onclick="loadDashboard()">🔄 Refresh</button>
+                </div>
+                <div class="employee-grid" id="employeeGrid"></div>
+            </div>
+            
+            <!-- Right: Today's Attendance -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">✅ Today's Attendance</div>
+                </div>
+                <div class="attendance-list" id="attendanceList"></div>
+            </div>
+        </div>
+        
+        <!-- Leaderboard -->
+        <div class="card">
+            <div class="card-header">
+                <div class="card-title">🏆 Top Performers - Monthly Leaderboard</div>
+            </div>
+            <div id="leaderboard"></div>
+        </div>
+    </div>
+
+    <script>
+        async function loadDashboard() {
+            try {
+                const dailyRes = await fetch('/api/daily_report');
+                const dailyData = await dailyRes.json();
+                
+                const monthlyRes = await fetch('/api/monthly_report');
+                const monthlyData = await monthlyRes.json();
+                
+                // Update stats
+                document.getElementById('totalEmployees').textContent = monthlyData.data.length;
+                document.getElementById('presentToday').textContent = dailyData.records.length;
+                
+                const totalDays = monthlyData.data.reduce((sum, emp) => sum + emp.days, 0);
+                const avgAttendance = monthlyData.data.length > 0 ? 
+                    Math.round((totalDays / (monthlyData.data.length * 20)) * 100) : 0;
+                document.getElementById('avgAttendance').textContent = avgAttendance + '%';
+                
+                // Load employees
+                const employeeGrid = document.getElementById('employeeGrid');
+                employeeGrid.innerHTML = '';
+                monthlyData.data.forEach(emp => {
+                    const card = document.createElement('div');
+                    card.className = 'employee-card';
+                    card.innerHTML = `
+                        <div class="employee-avatar">👤</div>
+                        <div class="employee-name">${emp.name}</div>
+                        <div class="employee-days">${emp.days} days</div>
+                    `;
+                    employeeGrid.appendChild(card);
+                });
+                
+                // Load today's attendance
+                const attendanceList = document.getElementById('attendanceList');
+                attendanceList.innerHTML = '';
+                if (dailyData.records.length === 0) {
+                    attendanceList.innerHTML = '<p style="text-align:center; color:#999;">No attendance yet</p>';
+                } else {
+                    dailyData.records.forEach(record => {
+                        const item = document.createElement('div');
+                        item.className = 'attendance-item';
+                        item.innerHTML = `
+                            <span class="attendance-name">👤 ${record.name}</span>
+                            <span class="attendance-time">🕐 ${record.time}</span>
+                        `;
+                        attendanceList.appendChild(item);
+                    });
+                }
+                
+                // Load leaderboard
+                const leaderboard = document.getElementById('leaderboard');
+                leaderboard.innerHTML = '';
+                const sorted = [...monthlyData.data].sort((a, b) => b.days - a.days);
+                const medals = ['🥇', '🥈', '🥉'];
+                
+                sorted.forEach((emp, index) => {
+                    const rate = Math.round((emp.days / 20) * 100);
+                    const item = document.createElement('div');
+                    item.className = 'leaderboard-item';
+                    item.innerHTML = `
+                        <div class="rank">#${index + 1}</div>
+                        <div class="leader-info">
+                            <div class="leader-name">${emp.name}</div>
+                            <div class="leader-rate">${emp.days} days • ${rate}% attendance</div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${rate}%"></div>
+                            </div>
+                        </div>
+                        ${index < 3 ? `<div class="medal">${medals[index]}</div>` : ''}
+                    `;
+                    leaderboard.appendChild(item);
+                });
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error loading data! Make sure to run: python force_add_data.py');
+            }
+        }
+        
+        function updateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('currentTime').textContent = time;
+        }
+        
+        loadDashboard();
+        updateTime();
+        setInterval(updateTime, 1000);
+        setInterval(loadDashboard, 30000);
+    </script>
+</body>
+</html>

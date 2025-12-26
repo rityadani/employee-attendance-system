@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Employee</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .container { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); max-width: 500px; width: 90%; }
+        h1 { color: #333; margin-bottom: 30px; text-align: center; }
+        input { width: 100%; padding: 15px; margin: 10px 0; border: 2px solid #ddd; border-radius: 10px; font-size: 1.1em; }
+        button { width: 100%; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 10px; font-size: 1.2em; cursor: pointer; margin-top: 20px; }
+        button:hover { opacity: 0.9; }
+        .back { text-align: center; margin-top: 20px; }
+        .back a { color: #667eea; text-decoration: none; }
+        #message { margin-top: 20px; padding: 15px; border-radius: 10px; text-align: center; display: none; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👤 Register Employee</h1>
+        <input type="text" id="name" placeholder="Enter Employee Name" required>
+        <button onclick="registerEmployee()">📸 Capture Face & Register</button>
+        <div id="message"></div>
+        <div class="back"><a href="/">← Back to Home</a></div>
+    </div>
+
+    <script>
+        async function registerEmployee() {
+            const name = document.getElementById('name').value;
+            if (!name) {
+                showMessage('Please enter a name', 'error');
+                return;
+            }
+
+            showMessage('Capturing images... Please look at camera for 10 seconds', 'success');
+            
+            try {
+                const response = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name })
+                });
+                
+                const data = await response.json();
+                showMessage(data.message, data.success ? 'success' : 'error');
+                
+                if (data.success) {
+                    setTimeout(() => window.location.href = '/', 2000);
+                }
+            } catch (error) {
+                showMessage('Error: ' + error.message, 'error');
+            }
+        }
+
+        function showMessage(msg, type) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.textContent = msg;
+            msgDiv.className = type;
+            msgDiv.style.display = 'block';
+        }
+    </script>
+</body>
+</html>

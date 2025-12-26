@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Attendance System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+        
+        .stat-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+        
+        .stat-value {
+            font-size: 3em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+        
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        
+        .card {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        
+        .card-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .list-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .item-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .item-info {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .nav-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        
+        .nav-btn {
+            padding: 12px 25px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        
+        @media (max-width: 768px) {
+            .content-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 ATTENDANCE DASHBOARD</h1>
+            <div class="nav-btns">
+                <a href="/register" class="nav-btn">➕ Register</a>
+                <a href="/attendance" class="nav-btn">📸 Attendance</a>
+                <a href="/reports" class="nav-btn">📊 Reports</a>
+                <a href="/" class="nav-btn">🏠 Home</a>
+            </div>
+        </div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" id="totalEmployees">15</div>
+                <div class="stat-label">Total Employees</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-value" id="presentToday">15</div>
+                <div class="stat-label">Present Today</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-value" id="avgAttendance">85%</div>
+                <div class="stat-label">Avg Attendance</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon">🕐</div>
+                <div class="stat-value" id="currentTime">--:--</div>
+                <div class="stat-label">Current Time</div>
+            </div>
+        </div>
+        
+        <div class="content-grid">
+            <div class="card">
+                <div class="card-title">👥 All Employees</div>
+                <div id="employeeList">
+                    <div class="list-item">
+                        <span class="item-name">👤 Ritesh Kumar</span>
+                        <span class="item-info">18 days</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="item-name">👤 Amit Sharma</span>
+                        <span class="item-info">17 days</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="item-name">👤 Priya Singh</span>
+                        <span class="item-info">19 days</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="item-name">👤 Rahul Verma</span>
+                        <span class="item-info">16 days</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="item-name">👤 Sneha Patel</span>
+                        <span class="item-info">18 days</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-title">✅ Today's Attendance</div>
+                <div id="attendanceList">
+                    <div class="list-item">
+                        <span class="item-name">👤 Ritesh Kumar</span>
+                        <span class="item-info">🕐 09:05:12</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="item-name">👤 Amit Sharma</span>
+                        <span class="item-info">🕐 09:12:34</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="item-name">👤 Priya Singh</span>
+                        <span class="item-info">🕐 09:18:45</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="item-name">👤 Rahul Verma</span>
+                        <span class="item-info">🕐 09:25:23</span>
+                    </div>
+                    <div class="list-item">
+                        <span class="item-name">👤 Sneha Patel</span>
+                        <span class="item-info">🕐 09:32:56</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function updateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('currentTime').textContent = time;
+        }
+        
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        // Try to load real data
+        async function loadRealData() {
+            try {
+                const dailyRes = await fetch('/api/daily_report');
+                const dailyData = await dailyRes.json();
+                
+                const monthlyRes = await fetch('/api/monthly_report');
+                const monthlyData = await monthlyRes.json();
+                
+                if (monthlyData.data && monthlyData.data.length > 0) {
+                    document.getElementById('totalEmployees').textContent = monthlyData.data.length;
+                    document.getElementById('presentToday').textContent = dailyData.records.length;
+                    
+                    const totalDays = monthlyData.data.reduce((sum, emp) => sum + emp.days, 0);
+                    const avgAttendance = Math.round((totalDays / (monthlyData.data.length * 20)) * 100);
+                    document.getElementById('avgAttendance').textContent = avgAttendance + '%';
+                    
+                    // Update employee list
+                    const employeeList = document.getElementById('employeeList');
+                    employeeList.innerHTML = '';
+                    monthlyData.data.slice(0, 10).forEach(emp => {
+                        const item = document.createElement('div');
+                        item.className = 'list-item';
+                        item.innerHTML = `
+                            <span class="item-name">👤 ${emp.name}</span>
+                            <span class="item-info">${emp.days} days</span>
+                        `;
+                        employeeList.appendChild(item);
+                    });
+                    
+                    // Update attendance list
+                    const attendanceList = document.getElementById('attendanceList');
+                    attendanceList.innerHTML = '';
+                    dailyData.records.slice(0, 10).forEach(record => {
+                        const item = document.createElement('div');
+                        item.className = 'list-item';
+                        item.innerHTML = `
+                            <span class="item-name">👤 ${record.name}</span>
+                            <span class="item-info">🕐 ${record.time}</span>
+                        `;
+                        attendanceList.appendChild(item);
+                    });
+                }
+            } catch (error) {
+                console.log('Using demo data');
+            }
+        }
+        
+        loadRealData();
+        setInterval(loadRealData, 30000);
+    </script>
+</body>
+</html>

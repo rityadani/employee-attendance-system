@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Dashboard</title>
+    <style>
+        body { background: #0a0e27; color: white; font-family: Arial; padding: 50px; }
+        .stat { background: rgba(255,255,255,0.1); padding: 20px; margin: 10px; border-radius: 10px; }
+        h1 { color: #667eea; }
+    </style>
+</head>
+<body>
+    <h1>🚀 Test Dashboard</h1>
+    
+    <div class="stat">
+        <h2>👥 Total Employees: <span id="total">0</span></h2>
+    </div>
+    
+    <div class="stat">
+        <h2>✅ Present Today: <span id="present">0</span></h2>
+    </div>
+    
+    <div class="stat">
+        <h2>📊 API Response:</h2>
+        <pre id="apiData">Loading...</pre>
+    </div>
+
+    <script>
+        async function testAPI() {
+            try {
+                const response = await fetch('/api/monthly_report');
+                const data = await response.json();
+                
+                document.getElementById('apiData').textContent = JSON.stringify(data, null, 2);
+                document.getElementById('total').textContent = data.data.length;
+                
+                const dailyRes = await fetch('/api/daily_report');
+                const dailyData = await dailyRes.json();
+                document.getElementById('present').textContent = dailyData.records.length;
+                
+            } catch (error) {
+                document.getElementById('apiData').textContent = 'ERROR: ' + error.message;
+            }
+        }
+        
+        testAPI();
+    </script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Attendance System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0e27;
+            min-height: 100vh;
+        }
+        
+        .stars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .star {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle 3s infinite;
+        }
+        
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            font-size: 1.8em;
+            font-weight: bold;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 10px;
+            transition: all 0.3s;
+        }
+        
+        .nav-links a:hover, .nav-links a.active {
+            background: rgba(102, 126, 234, 0.3);
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+        
+        .page-title {
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .chart-container {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 30px;
+        }
+        
+        .chart-title {
+            color: white;
+            font-size: 1.5em;
+            margin-bottom: 30px;
+        }
+        
+        .bar-chart {
+            display: flex;
+            align-items: flex-end;
+            gap: 20px;
+            height: 300px;
+        }
+        
+        .bar {
+            flex: 1;
+            background: linear-gradient(to top, #667eea, #764ba2);
+            border-radius: 10px 10px 0 0;
+            position: relative;
+            transition: all 0.3s;
+            min-height: 20px;
+        }
+        
+        .bar:hover {
+            filter: brightness(1.2);
+            transform: translateY(-5px);
+        }
+        
+        .bar-label {
+            position: absolute;
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9em;
+            white-space: nowrap;
+        }
+        
+        .bar-value {
+            position: absolute;
+            top: -25px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: white;
+            font-weight: bold;
+        }
+        
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .leaderboard-item {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            margin-bottom: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+        
+        .leaderboard-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+            transform: translateX(10px);
+        }
+        
+        .rank {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin-right: 20px;
+            min-width: 50px;
+        }
+        
+        .employee-info {
+            flex: 1;
+        }
+        
+        .employee-name {
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        
+        .attendance-rate {
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .medal {
+            font-size: 2em;
+        }
+        
+        @media (max-width: 768px) {
+            .navbar { padding: 15px 20px; flex-direction: column; gap: 20px; }
+            .nav-links { flex-wrap: wrap; justify-content: center; }
+            .bar-chart { height: 200px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars" id="stars"></div>
+    
+    <nav class="navbar">
+        <div class="logo">🚀 ATTENDANCE</div>
+        <div class="nav-links">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/employees">Employees</a>
+            <a href="/analytics" class="active">Analytics</a>
+            <a href="/">Home</a>
+        </div>
+    </nav>
+    
+    <div class="container">
+        <h1 class="page-title">📊 Analytics & Insights</h1>
+        
+        <div class="chart-container">
+            <h2 class="chart-title">Monthly Attendance Overview</h2>
+            <div class="bar-chart" id="barChart"></div>
+        </div>
+        
+        <div class="leaderboard">
+            <h2 class="chart-title">🏆 Top Performers</h2>
+            <div id="leaderboard"></div>
+        </div>
+    </div>
+
+    <script>
+        // Generate stars
+        const starsContainer = document.getElementById('stars');
+        for (let i = 0; i < 200; i++) {
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.style.left = Math.random() * 100 + '%';
+            star.style.top = Math.random() * 100 + '%';
+            star.style.animationDelay = Math.random() * 3 + 's';
+            starsContainer.appendChild(star);
+        }
+        
+        // Load analytics
+        async function loadAnalytics() {
+            try {
+                const response = await fetch('/api/monthly_report');
+                const data = await response.json();
+                
+                // Bar chart
+                const barChart = document.getElementById('barChart');
+                const maxDays = Math.max(...data.data.map(e => e.days));
+                
+                data.data.forEach(emp => {
+                    const bar = document.createElement('div');
+                    bar.className = 'bar';
+                    const height = (emp.days / maxDays) * 100;
+                    bar.style.height = height + '%';
+                    bar.innerHTML = `
+                        <div class="bar-value">${emp.days}</div>
+                        <div class="bar-label">${emp.name.split(' ')[0]}</div>
+                    `;
+                    barChart.appendChild(bar);
+                });
+                
+                // Leaderboard
+                const leaderboard = document.getElementById('leaderboard');
+                const sorted = [...data.data].sort((a, b) => b.days - a.days);
+                
+                sorted.forEach((emp, index) => {
+                    const medals = ['🥇', '🥈', '🥉'];
+                    const item = document.createElement('div');
+                    item.className = 'leaderboard-item';
+                    const rate = Math.round((emp.days / 20) * 100);
+                    item.innerHTML = `
+                        <div class="rank">#${index + 1}</div>
+                        <div class="employee-info">
+                            <div class="employee-name">${emp.name}</div>
+                            <div class="attendance-rate">${emp.days} days • ${rate}% attendance</div>
+                        </div>
+                        ${index < 3 ? `<div class="medal">${medals[index]}</div>` : ''}
+                    `;
+                    leaderboard.appendChild(item);
+                });
+            } catch (error) {
+                console.error('Error loading analytics:', error);
+            }
+        }
+        
+        loadAnalytics();
+    </script>
+</body>
+</html>
